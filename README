@@ -1,6 +1,10 @@
-# Agentic Workflow Streamlit App
+# agentic-langraph
 
-A Streamlit-based, LLM-orchestrated workflow application that uses Groq API and Langgraph to plan, execute, and reflect on user queries. The app breaks down queries into subtasks, selects and invokes tools (web fetch, calculator, data processing, chart creation), and iteratively refines results until the query is satisfied.
+A Streamlit-based, LLM-orchestrated workflow application that uses Groq API and Langgraph to plan, execute, and reflect on user queries. This repository is hosted under the GitHub account `devarajan8` and can be found at:
+
+```
+https://github.com/devarajan8/agentic-langraph.git
+```
 
 ## Features
 
@@ -34,8 +38,8 @@ A Streamlit-based, LLM-orchestrated workflow application that uses Groq API and 
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-org/agentic-workflow-streamlit.git
-   cd agentic-workflow-streamlit
+   git clone https://github.com/devarajan8/agentic-langraph.git
+   cd agentic-langraph
    ```
 
 2. **Create and activate a virtual environment**:
@@ -106,3 +110,4 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 *Built with ♥ using Streamlit, Groq API, and Langgraph.*
+
