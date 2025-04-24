@@ -1,0 +1,108 @@
+# Agentic Workflow Streamlit App
+
+A Streamlit-based, LLM-orchestrated workflow application that uses Groq API and Langgraph to plan, execute, and reflect on user queries. The app breaks down queries into subtasks, selects and invokes tools (web fetch, calculator, data processing, chart creation), and iteratively refines results until the query is satisfied.
+
+## Features
+
+- **Task Planning**: Prompts the LLM to decompose user queries into meaningful subtasks.
+- **Tool-Based Execution**: Leverages custom tools for fetching data, calculations, processing, and chart generation.
+- **Reflective Loop**: After executing tasks, the LLM assesses results and suggests refinements if needed.
+- **Interactive UI**: Displays tasks, progress, results, and generated charts in a Streamlit interface.
+- **Debug Mode**: Optional sidebar view for raw JSON state and intermediate data.
+
+## Architecture
+
+1. **`WorkflowState` (Pydantic Model)**: Central state container for query, tasks, results, data, charts, and flags.
+2. **Agents**:
+   - **PlanAgent**: Decomposes the query into subtasks using Groq API.
+   - **ToolAgent**: Chooses appropriate tools and executes individual tasks.
+   - **ReflectionAgent**: Evaluates results, checks completion, and refines tasks if necessary.
+3. **Custom Tools**:
+   - `fetch_web_tool` (simulated data fetch)
+   - `calculator_tool` (safe literal evaluation)
+   - `data_processing_tool` (clean/compare operations)
+   - `chart_creation_tool` (Matplotlib charts → base64 images)
+4. **Langgraph `StateGraph`**: Orchestrates nodes and transitions with conditional looping until completion.
+5. **Streamlit UI**: Front-end for user interaction, visualizing the workflow steps.
+
+## Prerequisites
+
+- Python 3.9+
+- A valid Groq API key (set `GROQ_API_KEY` in your environment)
+
+## Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-org/agentic-workflow-streamlit.git
+   cd agentic-workflow-streamlit
+   ```
+
+2. **Create and activate a virtual environment**:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # on macOS/Linux
+   .venv\Scripts\activate    # on Windows
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Configuration
+
+- **Environment Variable**:
+  ```bash
+  export GROQ_API_KEY="your_api_key_here"
+  ```
+  On Windows (PowerShell):
+  ```powershell
+  $env:GROQ_API_KEY = "your_api_key_here"
+  ```
+
+## Usage
+
+Launch the Streamlit app:
+
+```bash
+streamlit run app.py
+```
+
+1. Open your browser at `http://localhost:8501` (default).
+2. Enter any natural-language query in the text area.
+3. Click **Run Workflow** to start planning, execution, and reflection loops.
+4. Review subtasks, results, and generated charts. Toggle **Show Debug Info** for JSON state dumps.
+
+## File Structure
+
+```
+├── app.py                # Main Streamlit application
+├── requirements.txt      # Python dependencies
+├── README.md             # This documentation
+└── langgraph/            # Langgraph-based workflow modules
+    ├── graph.py          # StateGraph implementation
+    └── …                 # Additional helper modules
+```
+
+## Extending the Workflow
+
+- **Add New Tools**: Define a new `tool_<name>` function, register it with the graph, and update the agent prompts.
+- **Customize Agents**: Modify `plan_agent`, `tool_agent`, or `reflection_agent` logic or prompts to tailor LLM behavior.
+- **Data Connectors**: Replace simulated `fetch_web_tool` with real API integrations for live data.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -am 'Add new feature'`
+4. Push to the branch: `git push origin feature/my-feature`
+5. Open a Pull Request.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+*Built with ♥ using Streamlit, Groq API, and Langgraph.*
