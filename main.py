@@ -28,7 +28,7 @@ if not logger.handlers:
 # ---------------------
 # API Key Configuration
 # ---------------------
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_API_KEY = "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"
 if not GROQ_API_KEY:
     st.error("Please set the GROQ_API_KEY environment variable.")
     st.stop()
