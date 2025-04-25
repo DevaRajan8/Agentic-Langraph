@@ -1,5 +1,4 @@
-```markdown
-### Deep Research AI Agentic System
+# Deep Research AI Agentic System
 
 ## Overview
 This project implements a dual-agent AI system for deep online research. It uses:
@@ -29,16 +28,18 @@ This project implements a dual-agent AI system for deep online research. It uses
    git clone https://github.com/your-username/your-repo.git
    cd your-repo
    ```
+
 2. Install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
+
 3. Install Graphviz on your system:
-   - On Ubuntu/Debian:
+   * On Ubuntu/Debian:
      ```bash
      sudo apt-get update && sudo apt-get install graphviz
      ```
-   - On macOS (with Homebrew):
+   * On macOS (with Homebrew):
      ```bash
      brew install graphviz
      ```
@@ -53,12 +54,14 @@ export GROQ_API_KEY="sk-..."
 
 ## Usage
 Run the Streamlit application:
+
 ```bash
 streamlit run app.py
 ```
-- Enter your research query.
-- Adjust the **Max results** and **Context size** sliders.
-- Click **Run Deep Research** to view the answer, graph, and raw data.
+
+* Enter your research query.
+* Adjust the **Max results** and **Context size** sliders.
+* Click **Run Deep Research** to view the answer, graph, and raw data.
 
 ## Project Structure
 ```
@@ -69,19 +72,6 @@ streamlit run app.py
 ```
 
 ## Notes
-- The research agent caches results to speed up repeat queries.
-- Context trimming logic ensures prompts stay within API limits.
-- Modify `MAX_CONTEXT_LENGTH` default in `app.py` if needed.
-
-## License
-This project is released under the MIT License.
-```
-
-```text
-streamlit>=1.22.0
-requests>=2.28.0
-networkx>=3.0
-graphviz>=0.20
-tavily>=0.1.0
-```
-
+* The research agent caches results to speed up repeat queries.
+* Context trimming logic ensures prompts stay within API limits.
+* Modify `MAX_CONTEXT_LENGTH` default in `app.py` if needed.
