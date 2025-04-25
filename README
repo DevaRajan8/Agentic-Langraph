@@ -1,113 +1,75 @@
-# agentic-langraph
+```markdown
+### Deep Research AI Agentic System
 
-A Streamlit-based, LLM-orchestrated workflow application that uses Groq API and Langgraph to plan, execute, and reflect on user queries. This repository is hosted under the GitHub account `devarajan8` and can be found at:
+## Overview
+This project implements a dual-agent AI system for deep online research. It uses:
 
-```
-https://github.com/devarajan8/agentic-langraph.git
-```
+- **Research Agent**: Crawls and collects data from the web using the Tavily API.
+- **Answer Drafter Agent**: Generates concise answers via the Groq API based on collected context.
+- **Knowledge Graph**: Builds and visualizes relationships between sources and keywords using networkx and Graphviz.
+- **Streamlit UI**: Provides an interactive interface to input queries, adjust parameters, and view results.
 
 ## Features
-
-- **Task Planning**: Prompts the LLM to decompose user queries into meaningful subtasks.
-- **Tool-Based Execution**: Leverages custom tools for fetching data, calculations, processing, and chart generation.
-- **Reflective Loop**: After executing tasks, the LLM assesses results and suggests refinements if needed.
-- **Interactive UI**: Displays tasks, progress, results, and generated charts in a Streamlit interface.
-- **Debug Mode**: Optional sidebar view for raw JSON state and intermediate data.
-
-## Architecture
-
-1. **`WorkflowState` (Pydantic Model)**: Central state container for query, tasks, results, data, charts, and flags.
-2. **Agents**:
-   - **PlanAgent**: Decomposes the query into subtasks using Groq API.
-   - **ToolAgent**: Chooses appropriate tools and executes individual tasks.
-   - **ReflectionAgent**: Evaluates results, checks completion, and refines tasks if necessary.
-3. **Custom Tools**:
-   - `fetch_web_tool` (simulated data fetch)
-   - `calculator_tool` (safe literal evaluation)
-   - `data_processing_tool` (clean/compare operations)
-   - `chart_creation_tool` (Matplotlib charts → base64 images)
-4. **Langgraph `StateGraph`**: Orchestrates nodes and transitions with conditional looping until completion.
-5. **Streamlit UI**: Front-end for user interaction, visualizing the workflow steps.
+- Customizable number of search results and context size.
+- Automatic context trimming to respect API limits.
+- Downloadable answer text.
+- Interactive knowledge graph visualization.
+- Expandable raw data view with links to sources.
 
 ## Prerequisites
-
-- Python 3.9+
-- A valid Groq API key (set `GROQ_API_KEY` in your environment)
+- Python 3.8 or higher
+- System installation of Graphviz (for rendering graphs)
+- Valid API keys for:
+  - **Tavily** (`TAVILY_API_KEY`)
+  - **Groq** (`GROQ_API_KEY`)
 
 ## Installation
-
-1. **Clone the repository**:
+1. Clone the repository:
    ```bash
-   git clone https://github.com/devarajan8/agentic-langraph.git
-   cd agentic-langraph
+   git clone https://github.com/your-username/your-repo.git
+   cd your-repo
    ```
-
-2. **Create and activate a virtual environment**:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # on macOS/Linux
-   .venv\Scripts\activate    # on Windows
-   ```
-
-3. **Install dependencies**:
+2. Install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
+3. Install Graphviz on your system:
+   - On Ubuntu/Debian:
+     ```bash
+     sudo apt-get update && sudo apt-get install graphviz
+     ```
+   - On macOS (with Homebrew):
+     ```bash
+     brew install graphviz
+     ```
 
 ## Configuration
+Create a `.env` file or set environment variables directly:
 
-- **Environment Variable**:
-  ```bash
-  export GROQ_API_KEY="your_api_key_here"
-  ```
-  On Windows (PowerShell):
-  ```powershell
-  $env:GROQ_API_KEY = "your_api_key_here"
-  ```
+```bash
+export TAVILY_API_KEY="tvly-dev-..."
+export GROQ_API_KEY="sk-..."
+```
 
 ## Usage
-
-Launch the Streamlit app:
-
+Run the Streamlit application:
 ```bash
 streamlit run app.py
 ```
+- Enter your research query.
+- Adjust the **Max results** and **Context size** sliders.
+- Click **Run Deep Research** to view the answer, graph, and raw data.
 
-1. Open your browser at `http://localhost:8501` (default).
-2. Enter any natural-language query in the text area.
-3. Click **Run Workflow** to start planning, execution, and reflection loops.
-4. Review subtasks, results, and generated charts. Toggle **Show Debug Info** for JSON state dumps.
-
-## File Structure
-
+## Project Structure
 ```
 ├── app.py                # Main Streamlit application
 ├── requirements.txt      # Python dependencies
-├── README.md             # This documentation
-└── langgraph/            # Langgraph-based workflow modules
-    ├── graph.py          # StateGraph implementation
-    └── …                 # Additional helper modules
+├── README.md             # Project overview and setup instructions
+└── ...                   # Additional modules or assets
 ```
 
-## Extending the Workflow
-
-- **Add New Tools**: Define a new `tool_<name>` function, register it with the graph, and update the agent prompts.
-- **Customize Agents**: Modify `plan_agent`, `tool_agent`, or `reflection_agent` logic or prompts to tailor LLM behavior.
-- **Data Connectors**: Replace simulated `fetch_web_tool` with real API integrations for live data.
-
-## Contributing
-
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Commit your changes: `git commit -am 'Add new feature'`
-4. Push to the branch: `git push origin feature/my-feature`
-5. Open a Pull Request.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-*Built with ♥ using Streamlit, Groq API, and Langgraph.*
+## Notes
+- The research agent caches results to speed up repeat queries.
+- Context trimming logic ensures prompts stay within API limits.
+- Modify `MAX_CONTEXT_LENGTH` default in `app.py` if needed.
 
