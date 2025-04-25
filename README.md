@@ -54,7 +54,7 @@ export GROQ_API_KEY="sk-..."
 ## Usage
 Run the Streamlit application:
 ```bash
-streamlit run app.py
+streamlit run main.py
 ```
 - Enter your research query.
 - Adjust the **Max results** and **Context size** sliders.
@@ -62,7 +62,7 @@ streamlit run app.py
 
 ## Project Structure
 ```text
-├── app.py                # Main Streamlit application
+├── main.py                # Main Streamlit application
 ├── requirements.txt      # Python dependencies
 ├── README.md             # Project overview and setup instructions
 └── ...                   # Additional modules or assets
