@@ -201,8 +201,8 @@ def main():
     st.title("Deep Research AI Agentic System")
 
     # Check if Groq API key is set in environment
-    if not os.getenv("GROQ_API_KEY"):
-        st.warning("⚠️ GROQ_API_KEY environment variable not detected. Answer generation might fail.")
+    # if not os.getenv("GROQ_API_KEY"):
+    #     st.warning("⚠️ GROQ_API_KEY environment variable not detected. Answer generation might fail.")
 
     # Input area
     with st.container():
