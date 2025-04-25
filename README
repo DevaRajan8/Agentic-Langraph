@@ -1,113 +1,87 @@
 
 # Deep Research AI Agentic System
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)  
-[![Streamlit](https://img.shields.io/badge/Streamlit-%3E%3D1.22.0-orange)](https://streamlit.io/)
-
----
-
 ## Overview
-The **Deep Research AI Agentic System** is a dual-agent framework designed for extensive online research. It leverages:
-- **Research Agent**: Fetches and aggregates data from the web via the Tavily API.
-- **Answer Drafter Agent**: Crafts concise, context-aware summaries using the Groq API.
-- **Knowledge Graph**: Constructs and displays relationships between sources and keywords with NetworkX and Graphviz.
-- **Streamlit UI**: Offers an interactive interface for queries, parameter adjustments, and visualization.
+This project implements a dual-agent AI system for deep online research. It uses:
 
----
+- **Research Agent**: Crawls and collects data from the web using the Tavily API.
+- **Answer Drafter Agent**: Generates concise answers via the Groq API based on collected context.
+- **Knowledge Graph**: Builds and visualizes relationships between sources and keywords using networkx and Graphviz.
+- **Streamlit UI**: Provides an interactive interface to input queries, adjust parameters, and view results.
 
 ## Features
-- 🎯 **Customizable Searches**: Control max results and context length.  
-- 🔄 **Automatic Context Trimming**: Keeps prompts within API limits.  
-- 📥 **Downloadable Answers**: Export answers as text files.  
-- 🔍 **Interactive Knowledge Graph**: Visualize connections dynamically.  
-- 📂 **Raw Data View**: Expandable list of sources with direct links.  
-
----
-
-## Demo
-![Streamlit UI Demo](docs/screenshot.png)
-
----
+- Customizable number of search results and context size.
+- Automatic context trimming to respect API limits.
+- Downloadable answer text.
+- Interactive knowledge graph visualization.
+- Expandable raw data view with links to sources.
 
 ## Prerequisites
-- **Python** 3.8+  
-- **Graphviz** (system install for rendering graphs)  
-- **Tavily API Key** (`TAVILY_API_KEY`)  
-- **Groq API Key** (`GROQ_API_KEY`)  
-
----
+- Python 3.8 or higher
+- System installation of Graphviz (for rendering graphs)
+- Valid API keys for:
+  - **Tavily** (`TAVILY_API_KEY`)
+  - **Groq** (`GROQ_API_KEY`)
 
 ## Installation
-1. **Clone the repo**  
+1. Clone the repository:
    ```bash
    git clone https://github.com/your-username/your-repo.git
    cd your-repo
    ```
-2. **Install dependencies**  
+2. Install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. **Install Graphviz**  
-   - **Ubuntu/Debian**:
+3. Install Graphviz on your system:
+   - On Ubuntu/Debian:
      ```bash
      sudo apt-get update && sudo apt-get install graphviz
      ```
-   - **macOS (Homebrew)**:
+   - On macOS (with Homebrew):
      ```bash
      brew install graphviz
      ```
 
----
-
 ## Configuration
-Create a `.env` file in the project root or export environment variables:
+Create a `.env` file or set environment variables directly:
+
 ```bash
-export TAVILY_API_KEY="tvly-dev-yourkey"
-export GROQ_API_KEY="sk-yourkey"
+export TAVILY_API_KEY="tvly-dev-..."
+export GROQ_API_KEY="sk-..."
 ```
 
----
-
 ## Usage
-Launch the Streamlit app:
+Run the Streamlit application:
 ```bash
 streamlit run app.py
 ```
-1. Enter your research query.  
-2. Adjust the **Max results** and **Context size** sliders.  
-3. Click **Run Deep Research** to view the answer, graph, and raw data.
-
----
+- Enter your research query.
+- Adjust the **Max results** and **Context size** sliders.
+- Click **Run Deep Research** to view the answer, graph, and raw data.
 
 ## Project Structure
 ```text
-your-repo/
-├── app.py                # Streamlit application entry point
+├── app.py                # Main Streamlit application
 ├── requirements.txt      # Python dependencies
-├── README.md             # This document
-├── .env.example          # Example environment variables
-├── data/                 # Cached research results
-└── src/                  # Agent and utility modules
-    ├── research_agent.py
-    ├── drafter_agent.py
-    ├── graph_builder.py
-    └── utils.py
+├── README.md             # Project overview and setup instructions
+└── ...                   # Additional modules or assets
 ```
 
----
+## Notes
+- The research agent caches results to speed up repeat queries.
+- Context trimming logic ensures prompts stay within API limits.
+- Modify `MAX_CONTEXT_LENGTH` default in `app.py` if needed.
 
-## Dependencies
+## License
+This project is released under the MIT License.
+
+## Requirements
 ```text
 streamlit>=1.22.0
 requests>=2.28.0
 networkx>=3.0
 graphviz>=0.20
 tavily>=0.1.0
-groq>=0.1.0
-python-dotenv>=0.21.0
 ```
 
----
-
-## License
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
