@@ -5,7 +5,134 @@ This project implements a dual-agent AI system for deep online research. It uses
 
 - **Research Agent**: Crawls and collects data from the web using the Tavily API.
 - **Answer Drafter Agent**: Generates concise answers via the Groq API based on collected context.
-- **Knowledge Graph**: Builds and visualizes relationships between sources and keywords using networkx and Graphviz.
+- **Knowledge Graph**: Builds and visualizes relationHere’s a refined and styled version of your README:
+
+---
+
+# **Deep Research AI Agentic System**
+
+## 🚀 **Overview**
+The **Deep Research AI Agentic System** is a dual-agent AI platform for conducting deep online research. It integrates advanced APIs and tools to deliver concise answers, visualize knowledge, and provide an interactive user experience.
+
+### **Key Components**
+- **🕵️ Research Agent**  
+  Crawls and collects data from the web using the **Tavily API**.
+- **✍️ Answer Drafter Agent**  
+  Generates concise answers based on collected context using the **Groq API**.
+- **🌐 Knowledge Graph**  
+  Builds and visualizes relationships between sources and keywords using **networkx** and **Graphviz**.
+- **🎨 Streamlit UI**  
+  An interactive interface to input queries, adjust parameters, and view results.
+
+---
+
+## ✨ **Features**
+- **Customizable Parameters**  
+  Adjust the number of search results and context size.  
+- **Automatic Context Management**  
+  Ensures prompts respect API limits through trimming.  
+- **Downloadable Answers**  
+  Save generated answers as text files.  
+- **Interactive Knowledge Graph**  
+  Visualize relationships dynamically with expandable views.  
+- **Raw Data Access**  
+  View raw data with links to sources for further exploration.  
+
+---
+
+## 🛠️ **Prerequisites**
+- **Python**: Version 3.8 or higher.  
+- **Graphviz**: Installed on your system for graph rendering.  
+- **API Keys**:  
+  - **Tavily**: `TAVILY_API_KEY`  
+  - **Groq**: `GROQ_API_KEY`  
+
+---
+
+## 📦 **Installation**
+
+1. **Clone the Repository**  
+   ```bash
+   git clone https://github.com/DevaRajan8/Deep-Search-Ai.git
+   cd Deep-Search-Ai
+   ```
+
+2. **Install Dependencies**  
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Install Graphviz**  
+   - **Ubuntu/Debian**  
+     ```bash
+     sudo apt-get update && sudo apt-get install graphviz
+     ```
+   - **macOS** (via Homebrew)  
+     ```bash
+     brew install graphviz
+     ```
+
+---
+
+## ⚙️ **Configuration**
+
+Set up your environment variables by creating a `.env` file or exporting them directly:  
+
+```bash
+# Example for .env file
+TAVILY_API_KEY="tvly-dev-..."
+GROQ_API_KEY="sk-..."
+```
+
+Or export them directly:  
+
+```bash
+export TAVILY_API_KEY="tvly-dev-..."
+export GROQ_API_KEY="sk-..."
+```
+
+---
+
+## ▶️ **Usage**
+
+Run the Streamlit application:  
+
+```bash
+streamlit run app.py
+```
+
+### Steps:
+1. Enter your **research query**.  
+2. Adjust the **Max Results** and **Context Size** sliders.  
+3. Click **Run Deep Research** to view:  
+   - Generated answers.  
+   - Knowledge graph visualizations.  
+   - Raw data with source links.  
+
+---
+
+## 📂 **Project Structure**
+```plaintext
+├── app.py                # Main Streamlit application
+├── requirements.txt      # Python dependencies
+├── README.md             # Project overview and setup instructions
+└── ...                   # Additional modules or assets
+```
+
+---
+
+## 📝 **Notes**
+- The **Research Agent** caches results to improve performance for repeat queries.  
+- **Context Trimming Logic** ensures API limits are respected.  
+- You can modify the default `MAX_CONTEXT_LENGTH` in `app.py` to suit your needs.  
+
+---
+
+Feel free to contribute or report issues to make **Deep Research AI Agentic System** even better!  
+
+---
+
+This version is styled for clarity and readability while maintaining a professional tone. Let me know if you need any further adjustments!ships between sources and keywords using networkx and Graphviz.
 - **Streamlit UI**: Provides an interactive interface to input queries, adjust parameters, and view results.
 
 ## Features
