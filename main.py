@@ -35,7 +35,7 @@ def call_groq_api(prompt: str, max_retries: int = 3) -> str:
     Call Groq API with retry/backoff.
     """
     url = "https://api.groq.com/openai/v1/chat/completions"
-    api_key = os.getenv("GROQ_API_KEY")
+    api_key = "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"
     if not api_key:
         st.error("Missing GROQ_API_KEY environment variable.")
         return ""
