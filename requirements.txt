@@ -1,4 +1,6 @@
 streamlit 
 langgraph
 langchain
-matplotlib
+tavily-python
+requests
+graphviz
