@@ -73,3 +73,15 @@ streamlit run app.py
 - Context trimming logic ensures prompts stay within API limits.
 - Modify `MAX_CONTEXT_LENGTH` default in `app.py` if needed.
 
+## License
+This project is released under the MIT License.
+```
+
+```text
+streamlit>=1.22.0
+requests>=2.28.0
+networkx>=3.0
+graphviz>=0.20
+tavily>=0.1.0
+```
+
