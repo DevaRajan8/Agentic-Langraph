@@ -85,12 +85,13 @@ def call_groq_api(prompt: str, max_retries: int = 3) -> str:
 # ----------------------------------------
 # Research agent using Tavily API directly
 # ----------------------------------------
-@st.cache_data(show_spinner=True)
+@st.cache_data(show_spinner=True, ttl=600)  # Added TTL for caching
 def research_agent(query: str, max_results: int = 5) -> List[Dict]:
     """
     Use Tavily API directly with requests.
     """
     results = []
+    response = None  # Initialize response variable
     
     try:
         # Make direct API call to Tavily
@@ -109,32 +110,58 @@ def research_agent(query: str, max_results: int = 5) -> List[Dict]:
             "include_raw_content": True
         }
         
+        st.info(f"Sending search request to Tavily for: {query}")
         response = requests.post(url, json=payload, headers=headers)
         response.raise_for_status()
         data = response.json()
         
+        # Debug the response
+        st.write(f"Received response with status code: {response.status_code}")
+        
         # Extract results
         search_results = data.get("results", [])
+        if not search_results:
+            st.warning("Tavily returned no search results. The API response contains a summary but no individual results.")
+            
+            # If we have an answer directly from Tavily, create a single synthetic document
+            if data.get("answer"):
+                results.append({
+                    "url": "https://tavily.com/answer",
+                    "text": f"Tavily Answer: {data.get('answer')}"
+                })
+                return results
+        
+        # Process search results if present
         for result in search_results:
             url = result.get("url", "")
             # First try to get raw_content, fall back to content
             content = result.get("raw_content", result.get("content", ""))
             
+            # Check if content exists and is not None
+            if content is None:
+                content = f"No content available for this result from {url}"
+            
             # Limit content length for each source
             if len(content) > MAX_CONTEXT_LENGTH // max_results:
                 content = content[:MAX_CONTEXT_LENGTH // max_results] + "... [Content truncated]"
             
-            if url and content:
+            if url:  # Just check if URL exists, content might be empty but that's still valid data
                 results.append({"url": url, "text": content})
                 
     except Exception as e:
         st.error(f"Tavily search failed: {str(e)}")
         # Debug response
         try:
-            st.error(f"Response data: {response.text[:200]}...")
+            if response:
+                st.error(f"Response data: {response.text[:500]}...")
         except:
-            pass
-        return []
+            st.error("Could not access response text")
+        
+        # Fallback - create a synthetic result with the error
+        results.append({
+            "url": "error://tavily-search-failed",
+            "text": f"Search error: {str(e)}. Please try a different query or check the Tavily API key."
+        })
     
     return results
 
@@ -154,17 +181,21 @@ def answer_agent(docs: List[Dict], query: str) -> str:
     for doc in docs:
         excerpt = doc['text'][:1000] + "... [truncated]"
         if total_context_length + len(excerpt) <= MAX_CONTEXT_LENGTH - 500:  # Leave room for prompt
-            context_parts.append(excerpt)
+            context_parts.append(f"Source: {doc['url']}\n{excerpt}")
             total_context_length += len(excerpt)
         else:
             break
+    
+    if not context_parts:
+        return "The context is empty. Unable to generate an answer."
     
     context = "\n---\n".join(context_parts)
     prompt = (
         "You are a research assistant. Use the following context to answer the question.\n"
         f"Question: {query}\n\n"
         f"Context:\n{context}\n\n"
-        "Provide a concise, accurate answer based only on the information in the context:"
+        "Provide a concise, accurate answer based only on the information in the context. "
+        "If the context doesn't contain relevant information, state that clearly."
     )
     return call_groq_api(prompt)
 
@@ -181,28 +212,27 @@ def build_knowledge_graph_dot(docs: List[Dict]) -> graphviz.Digraph:
         short_url = key.split("//")[-1][:30] + "..." if len(key) > 35 else key
         dot.node(key, label=short_url, shape='box')
         
-        # Extract capitalized keywords
-        words = doc['text'][:5000].split()  # Limit text analyzed for keywords
-        keywords = {w.strip('.,!?():;') for w in words if w.istitle() and len(w) > 4}
-        
-        # Take just the first 5 keywords to keep graph manageable
-        for kw in list(keywords)[:5]:
-            # Only add if keyword is not just a number
-            if not kw.isdigit():
-                dot.node(kw)
-                dot.edge(key, kw)
+        # Extract capitalized keywords - safely handle content
+        text = doc['text']
+        if text and not text.startswith("Search error:"):  # Skip error messages
+            words = text[:5000].split()  # Limit text analyzed for keywords
+            keywords = {w.strip('.,!?():;') for w in words if len(w) > 4 and w[0].isupper() and w.isalpha()}
+            
+            # Take just the first 5 keywords to keep graph manageable
+            for kw in list(keywords)[:5]:
+                # Only add if keyword is not just a number
+                if not kw.isdigit():
+                    dot.node(kw)
+                    dot.edge(key, kw)
     return dot
 
 # ----------------------------------------
 # Streamlit UI
 # ----------------------------------------
 def main():
+    global MAX_CONTEXT_LENGTH
     st.set_page_config(page_title="Deep Research AI Agentic System", layout="wide")
     st.title("Deep Research AI Agentic System")
-
-    # Check if Groq API key is set in environment
-    # if not os.getenv("GROQ_API_KEY"):
-    #     st.warning("⚠️ GROQ_API_KEY environment variable not detected. Answer generation might fail.")
 
     # Input area
     with st.container():
@@ -215,9 +245,11 @@ def main():
             context_size = st.slider("Context size limit", 1000, 15000, MAX_CONTEXT_LENGTH, step=1000)
         with col3:
             run_button = st.button("Run Deep Research", type="primary")
+            
+    # Add a session state to track API key validation
     
-    # Update context size based on slider (no need for global declaration)
-    # We'll just use the context_size variable directly
+    # Update context size based on slider - this needs to be done here
+    MAX_CONTEXT_LENGTH = context_size
     
     if run_button:
         if not query:
@@ -227,9 +259,6 @@ def main():
             tab1, tab2, tab3 = st.tabs(["Answer", "Knowledge Graph", "Raw Data"])
             
             with st.spinner("Collecting data via Tavily..."):
-                # Use context_size instead of MAX_CONTEXT_LENGTH
-                # But first adjust the global variable
-                global_context_adjust(context_size)
                 docs = research_agent(query, max_results)
             
             if not docs:
@@ -252,8 +281,12 @@ def main():
                 
                 with tab2:
                     st.subheader("Knowledge Graph")
-                    dot = build_knowledge_graph_dot(docs)
-                    st.graphviz_chart(dot)
+                    try:
+                        dot = build_knowledge_graph_dot(docs)
+                        st.graphviz_chart(dot)
+                    except Exception as e:
+                        st.error(f"Failed to build knowledge graph: {str(e)}")
+                        st.info("The knowledge graph couldn't be generated, possibly due to insufficient keyword extraction from the available content.")
                 
                 with tab3:
                     st.subheader("Raw Research Data")
@@ -263,12 +296,8 @@ def main():
                     for i, doc in enumerate(docs):
                         with st.expander(f"Source {i+1}: {doc['url']} ({len(doc['text'])} chars)"):
                             st.write(doc['text'][:1000] + "..." if len(doc['text']) > 1000 else doc['text'])
-                            st.markdown(f"[Visit source]({doc['url']})")
-
-# Function to adjust the global context size
-def global_context_adjust(new_size):
-    global MAX_CONTEXT_LENGTH
-    MAX_CONTEXT_LENGTH = new_size
+                            if not doc['url'].startswith("error://"):
+                                st.markdown(f"[Visit source]({doc['url']})")
 
 if __name__ == "__main__":
     main()
