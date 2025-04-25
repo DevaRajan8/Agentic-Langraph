@@ -2,4 +2,4 @@ streamlit>=1.22.0
 requests>=2.28.0
 networkx>=3.0
 graphviz>=0.20
-tavily>=0.1.0
+tavily-python>=0.1.0
